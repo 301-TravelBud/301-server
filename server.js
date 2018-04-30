@@ -11,10 +11,11 @@ const bodyparser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL;
-
+process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
 
 // Database Setup
-const client = new pg.Client(process.env.DATABASE_URL);
+const client = new pg.Client(process.env.DATABASE_URL || 'postgres://epkccoenjyskis:58e01cf0fbb5289e6fd83aa142ff61e25949d287a00c19468caea6353ed5b12a@ec2-54-204-46-236.compute-1.amazonaws.com:5432/d4bj4v6b2vvvmq'
+);
 client.connect();
 client.on('error', err => console.error(err));
 
@@ -32,19 +33,18 @@ app.get('/', (req, res) => res.redirect(CLIENT_URL));
 
 app.get('*', (req, res) => res.sendStatus('you didnt get there'));
 
-
-
+loadDB();
 app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 
-
 function loadDB() {
+
   client.query(`
     CREATE TABLE IF NOT EXISTS
     users (
       user_id SERIAL PRIMARY KEY,
       user_name VARCHAR(255) UNIQUE NOT NULL,
       email VARCHAR (255) UNIQUE NOT NULL,
-      public BOOLEAN,
+      public BOOLEAN
     );`
   )
     // .then(loadUsers)
@@ -58,7 +58,7 @@ function loadDB() {
       country VARCHAR(100) NOT NULL,
       city VARCHAR(100),
       start_date DATE,
-      end_date DATE,
+      end_date DATE
     );`
   )
     // .then(loadtrips)
