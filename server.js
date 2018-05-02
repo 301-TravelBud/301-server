@@ -12,7 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL;
 // process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
-process.env.DATABASE_URL = 'postgress://mason:Zaqwsx12345!@localhost:5432/'
+process.env.DATABASE_URL = 'postgress://mason:Zaqwsx12345!@localhost:5432/';
+
 // Database Setup
 const client = new pg.Client(process.env.DATABASE_URL || 'postgres://epkccoenjyskis:58e01cf0fbb5289e6fd83aa142ff61e25949d287a00c19468caea6353ed5b12a@ec2-54-204-46-236.compute-1.amazonaws.com:5432/d4bj4v6b2vvvmq'
 );
@@ -29,13 +30,13 @@ app.get('/test', (req, res) => res.send('hello world'));
 
 
 app.get('/trips', (req, res) => {
-  
+
   client.query('SELECT * FROM trips;')
     .then(results =>{
 
-     res.send(results.rows)
+      res.send(results.rows);
     })
-    
+
     .catch(console.error);
 
 });
@@ -59,10 +60,10 @@ app.post('/addtrip', (req, res) => {
   let {user_id, country, city, start_date, end_date} = req.body;
   client.query(`
     INSERT INTO users(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4)`,
-    [user_id, country, city, start_date, end_date]
+  [user_id, country, city, start_date, end_date]
   )
-  .then(results => res.send('new data user'))
-  .catch(console.error);
+    .then(results => res.send('new data user'))
+    .catch(console.error);
 });
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
