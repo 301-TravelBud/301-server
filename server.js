@@ -40,9 +40,11 @@ app.get('/trips', (req, res) => {
     .catch(console.error);
 
 });
-app.get('/admin', (req, res) => {
+app.post('/CreateUser', (req, res) => {
   client.query(`
-  SELECT * FROM users;`)
+  INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`
+[]
+)
     .then(results => {
       res.send(results.rows);
     })
@@ -58,6 +60,8 @@ app.post('/addtrip', (req, res) => {
     .then(results => res.send('new data user'))
     .catch(console.error);
 });
+app.get('/CreateUser', )
+  .then
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
