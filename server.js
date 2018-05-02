@@ -57,12 +57,16 @@ app.get('/trips', (req, res) => {
 
 //masons .post attempt commented because no faith
 app.post('/addtrip', (req, res) => {
+  
   let {user_id, country, city, start_date, end_date} = req.body;
   client.query(`
-    INSERT INTO users(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4)`,
+    INSERT INTO trips(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4, $5)`,
   [user_id, country, city, start_date, end_date]
   )
-    .then(results => res.send('new data user'))
+    .then(results  => {
+      
+      res.send('got results')
+    })
     .catch(console.error);
 });
 
