@@ -10,8 +10,9 @@ const bodyparser = require('body-parser');
 // Application Setup
 const app = express();
 const PORT = process.env.PORT || 3000;
-const CLIENT_URL = process.env.CLIENT_URL;
-process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:8080';
+//  process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
+process.env.DATABASE_URL = 'postgres://localhost:5432';
 // process.env.DATABASE_URL = 'postgress://mason:Zaqwsx12345!@localhost:5432/';
 
 // Database Setup
@@ -29,6 +30,7 @@ app.get('/', (req, res) => res.redirect(CLIENT_URL));
 app.get('/test', (req, res) => res.send('hello world'));
 
 
+
 app.get('/addtrips', (req, res) => {
 
   client.query('SELECT * FROM trips;')
@@ -36,11 +38,15 @@ app.get('/addtrips', (req, res) => {
 
       res.send(results.rows);
     })
-
     .catch(console.error);
-
 });
 
+// data for marker
+app.get('/markers', (req, res) => {
+  client.query('SELECT user_name, email, public, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
+    .then(results => res.send(results.rows))
+    .catch(console.error);
+});
 
 
 // app.post('/login', (req, res) => {
