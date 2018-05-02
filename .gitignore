@@ -4,7 +4,9 @@
 .DS_Store
 .AppleDouble
 .LSOverride
-
+.env
+node_modules
+package-lock.json
 ### Linux ###
 *~
 
