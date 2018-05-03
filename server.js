@@ -33,6 +33,16 @@ app.use(express.urlencoded({extended:true}));
 app.get('/', (req, res) => res.redirect(CLIENT_URL));
 app.get('/test', (req, res) => res.send('hello world'));
 
+app.get('/trips', (req, res) => {
+  client.query('SELECT * FROM trips;')
+    .then(results =>{
+      res.send(results.rows);
+    })
+
+    .catch(console.error);
+
+});
+
 app.get('/admin', (req, res) => {
 
   client.query('SELECT * FROM users;')
