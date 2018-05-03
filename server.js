@@ -11,9 +11,10 @@ const bodyparser = require('body-parser');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:8080';
+const CLIENT_URL = process.env.CLIENT_URL;
 process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
 // process.env.DATABASE_URL = 'postgress://mason:Zaqwsx12345!@localhost:5432/';
+
 // Database Setup
 const client = new pg.Client(process.env.DATABASE_URL || 'postgres://epkccoenjyskis:58e01cf0fbb5289e6fd83aa142ff61e25949d287a00c19468caea6353ed5b12a@ec2-54-204-46-236.compute-1.amazonaws.com:5432/d4bj4v6b2vvvmq'
 );
@@ -40,16 +41,17 @@ app.get('/trips', (req, res) => {
     .catch(console.error);
 
 });
-// app.post('/CreateUser', (req, res) => {
-//   client.query(`
-//   INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`
-// []
-// )
-//     .then(results => {
-//       res.send(results.rows);
-//     })
-//     .catch(console.error);
-// });
+app.post('/createuser', (req, res) => {
+  console.log(req.body, 'ERROR IS HERE BITCH');
+  client.query(`
+  INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`,
+  [req.body.user_name, req.body.password, req.body.email]
+  )
+    .then(results => {
+      res.send(results.rows);
+    })
+    .catch(console.error);
+});
 //masons .post attempt commented because no faith
 app.post('/addtrip', (req, res) => {
   let {user_id, country, city, start_date, end_date} = req.body;
@@ -58,6 +60,11 @@ app.post('/addtrip', (req, res) => {
   [user_id, country, city, start_date, end_date]
   )
     .then(results => res.send('new data user'))
+    .catch(console.error);
+});
+app.get('/markers', (req, res) => {
+  client.query('SELECT user_name, email, public, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
+    .then(results => res.send(results.rows))
     .catch(console.error);
 });
 app.get('/admin', (req, res) => {
@@ -71,6 +78,17 @@ app.get('/admin', (req, res) => {
     .catch(console.error);
 
 });
+
+app.get('/login', (req, res) => {
+  client.query(`SELECT count(*) FROM users WHERE user_name = $1`,
+    [req.body.user_name])
+    .then(results => {
+      res.send(results.rows[0]);
+    })
+    .catch(console.error);
+});
+
+
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
