@@ -11,6 +11,7 @@ const bodyparser = require('body-parser');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
+
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:8080';
 
 // process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
@@ -43,13 +44,10 @@ app.get('/admin', (req, res) => {
 
 });
 
-app.get('/addtrips', (req, res) => {
-  client.query('SELECT * FROM trips;')
-    .then(results =>{
-
-      res.send(results.rows);
-    })
-
+// data for marker
+app.get('/markers', (req, res) => {
+  client.query('SELECT user_name, email, public, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
+    .then(results => res.send(results.rows))
     .catch(console.error);
 });
 
@@ -63,15 +61,6 @@ app.get('/addtrips', (req, res) => {
 //     })
 //     .catch(console.error);
 // });
-
-
-// data for marker
-app.get('/markers', (req, res) => {
-  client.query('SELECT user_name, email, public, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
-    .then(results => res.send(results.rows))
-    .catch(console.error);
-});
-
 
 //masons .post attempt commented because no faith
 app.post('/addtrip', (req, res) => {
@@ -89,6 +78,19 @@ app.post('/addtrip', (req, res) => {
     .catch(console.error);
 });
 
+app.get('/admin', (req, res) => {
+
+  client.query('SELECT * FROM users;')
+    .then(results =>{
+
+      res.send(results.rows);
+    })
+
+    .catch(console.error);
+
+});
+
+
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
 loadDB();
@@ -101,8 +103,7 @@ function loadDB() {
     users (
       user_id SERIAL PRIMARY KEY,
       user_name VARCHAR(255) UNIQUE NOT NULL,
-      email VARCHAR (255) UNIQUE NOT NULL,
-      public BOOLEAN,
+      email VARCHAR (255) NOT NULL,
       password VARCHAR(255)
     );`
   )
