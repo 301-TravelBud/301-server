@@ -13,8 +13,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:8080';
 
-//  process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
-process.env.DATABASE_URL = 'postgres://localhost:5432';
+process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
+// process.env.DATABASE_URL = 'postgres://localhost:5432';
 // process.env.DATABASE_URL = 'postgress://mason:Zaqwsx12345!@localhost:5432/';
 
 // Database Setup
@@ -31,7 +31,17 @@ app.use(express.urlencoded({extended:true}));
 app.get('/', (req, res) => res.redirect(CLIENT_URL));
 app.get('/test', (req, res) => res.send('hello world'));
 
+app.get('/admin', (req, res) => {
 
+  client.query('SELECT * FROM users;')
+    .then(results =>{
+
+      res.send(results.rows);
+    })
+
+    .catch(console.error);
+
+});
 
 app.get('/addtrips', (req, res) => {
   client.query('SELECT * FROM trips;')
@@ -43,16 +53,16 @@ app.get('/addtrips', (req, res) => {
     .catch(console.error);
 });
 
-app.post('/CreateUser', (req, res) => {
-  client.query(`
-  INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`
-[]
-)
-    .then(results => {
-      res.send(results.rows);
-    })
-    .catch(console.error);
-});
+// app.post('/CreateUser', (req, res) => {
+//   client.query(`
+//   INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`
+// []
+// )
+//     .then(results => {
+//       res.send(results.rows);
+//     })
+//     .catch(console.error);
+// });
 
 
 // data for marker
@@ -65,21 +75,19 @@ app.get('/markers', (req, res) => {
 
 //masons .post attempt commented because no faith
 app.post('/addtrip', (req, res) => {
-  
+
   let {user_id, country, city, start_date, end_date} = req.body;
   client.query(`
 
     INSERT INTO trips(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4, $5)`,
   [user_id, country, city, start_date, end_date]
   )
-    .then(results  => {
-      
-      res.send('got results')
+    .then(results => {
+
+      res.send('got results');
     })
     .catch(console.error);
 });
-app.get('/CreateUser', )
-  .then
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
