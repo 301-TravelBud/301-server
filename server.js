@@ -40,16 +40,16 @@ app.get('/trips', (req, res) => {
     .catch(console.error);
 
 });
-app.post('/CreateUser', (req, res) => {
-  client.query(`
-  INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`
-[]
-)
-    .then(results => {
-      res.send(results.rows);
-    })
-    .catch(console.error);
-});
+// app.post('/CreateUser', (req, res) => {
+//   client.query(`
+//   INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`
+// []
+// )
+//     .then(results => {
+//       res.send(results.rows);
+//     })
+//     .catch(console.error);
+// });
 //masons .post attempt commented because no faith
 app.post('/addtrip', (req, res) => {
   let {user_id, country, city, start_date, end_date} = req.body;
@@ -60,8 +60,17 @@ app.post('/addtrip', (req, res) => {
     .then(results => res.send('new data user'))
     .catch(console.error);
 });
-app.get('/CreateUser', )
-  .then
+app.get('/admin', (req, res) => {
+
+  client.query('SELECT * FROM users;')
+    .then(results =>{
+
+      res.send(results.rows);
+    })
+
+    .catch(console.error);
+
+});
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
@@ -75,8 +84,7 @@ function loadDB() {
     users (
       user_id SERIAL PRIMARY KEY,
       user_name VARCHAR(255) UNIQUE NOT NULL,
-      email VARCHAR (255) UNIQUE NOT NULL,
-      public BOOLEAN,
+      email VARCHAR (255) NOT NULL,
       password VARCHAR(255)
     );`
   )
