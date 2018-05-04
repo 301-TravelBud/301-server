@@ -4,7 +4,7 @@
 **Version**: 1.0.0
 
 ## Overview
-This is the backend files for the ABAD site. 
+This is the backend files for the AB AD site. 
 
 ## Getting Started
 Our front-end is hosted by GitHub. The back-end of our site is hosted by Heroku. 
@@ -16,10 +16,8 @@ The application uses JavaScript,express, cors, pg, superagent, and bodyparser.
 4/30/18 1:30pm - initial commit for the backend including connection to database - CH
 5/1/18 -12:00pm - connected client to database via server.js - (Mobbed- Driver:MB Nav:AB, AG, and CH)
 
+5/2/18 minor bug fixes - CH 
 
 ## Credits and Collaborations
 Task management - Trello - https://trello.com/b/O2xf8GNa/301-project 
 
-
-- Wireframes
-- UX Workflow
