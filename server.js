@@ -98,7 +98,6 @@ app.get('/admin', (req, res) => {
     })
 
     .catch(console.error);
-
 });
 
 
