@@ -34,8 +34,9 @@ app.get('/', (req, res) => res.redirect(CLIENT_URL));
 app.get('/test', (req, res) => res.send('hello world'));
 
 app.get('/trips', (req, res) => {
-  client.query('SELECT * FROM trips;')
+  client.query('SELECT user_name, email, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
     .then(results =>{
+      console.log(results.rows);
       res.send(results.rows);
     })
 
