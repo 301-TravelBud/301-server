@@ -14,6 +14,7 @@ const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:8080';
 
 // process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
 // process.env.DATABASE_URL = 'postgres://localhost:5432';
+// process.env.DATABASE_URL = 'postgress://mason:Zaqwsx12345!@localhost:5432/';
 
 
 // Database Setup
