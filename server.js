@@ -45,8 +45,9 @@ app.post('/createuser', (req, res) => {
   client.query(`
   INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`,
   [req.body.user_name, req.body.password, req.body.email]
-  )
-    .then(results => {
+  );
+  res.send('got the info')
+    .then(res => {
       client.query(`
      SELECT * FROM users WHERE user_name = $1;`,[req.body.user_name])
         .then(results => {
@@ -62,8 +63,9 @@ app.post('/addtrip', (req, res) => {
   client.query(`
     INSERT INTO trips(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4, $5)`,
   [user_id, country, city, start_date, end_date]
-  )
-    .then(res => res.send('new data user', res))
+  );
+  res.send('got the info')
+    // .then(res => res.send('new data user', res))
     .catch(console.error);
 });
 app.get('/markers', (req, res) => {
@@ -96,7 +98,7 @@ app.get('/login', (req, res) => {
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
 loadDB();
-app.listen(PORT, () => console.log(`listening on port: ${PORT} ${process.env.CLIENT_URL}`));
+app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
 
 function loadDB() {
 
