@@ -42,13 +42,17 @@ app.get('/trips', (req, res) => {
 
 });
 app.post('/createuser', (req, res) => {
-  console.log(req.body, 'ERROR IS HERE BITCH');
   client.query(`
   INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`,
   [req.body.user_name, req.body.password, req.body.email]
   )
     .then(results => {
-      res.send(results.rows);
+      client.query(`
+     SELECT * FROM users WHERE user_name = $1;`,[req.body.user_name])
+        .then(results => {
+          res.send(results.rows);
+
+        });
     })
     .catch(console.error);
 });
@@ -56,14 +60,14 @@ app.post('/createuser', (req, res) => {
 app.post('/addtrip', (req, res) => {
   let {user_id, country, city, start_date, end_date} = req.body;
   client.query(`
-    INSERT INTO trips(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4)`,
+    INSERT INTO trips(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4, $5)`,
   [user_id, country, city, start_date, end_date]
   )
-    .then(results => res.send('new data user'))
+    .then(res => res.send('new data user', res))
     .catch(console.error);
 });
 app.get('/markers', (req, res) => {
-  client.query('SELECT user_name, email, public, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
+  client.query('SELECT user_name, email, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
     .then(results => res.send(results.rows))
     .catch(console.error);
 });
@@ -71,7 +75,6 @@ app.get('/admin', (req, res) => {
 
   client.query('SELECT * FROM users;')
     .then(results =>{
-
       res.send(results.rows);
     })
 
