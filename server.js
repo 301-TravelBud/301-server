@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:8080';
 
 // process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
-
 // process.env.DATABASE_URL = 'postgres://localhost:5432';
 // process.env.DATABASE_URL = 'postgress://mason:Zaqwsx12345!@localhost:5432/';
 
@@ -53,13 +52,19 @@ app.get('/admin', (req, res) => {
 });
 
 app.post('/createuser', (req, res) => {
-  console.log(req.body, 'ERROR IS HERE BITCH');
   client.query(`
   INSERT INTO users(user_name, password, email) VALUES($1, $2, $3);`,
-  [req.body.user_name, req.body.password, req.body.email]
-  )
+  [req.body.user_name, req.body.password, req.body.email])
+    .then(result => {
+      return client.query(`
+  SELECT * FROM users WHERE user_name = $1;`,[req.body.user_name]);
+      // console.log('res', result);
+
+    })
     .then(results => {
-      res.send(results.rows);
+      console.log('here are the results on server side', results);
+      res.send(results.rows[0]);
+
     })
     .catch(console.error);
 });
@@ -98,6 +103,7 @@ app.get('/login', (req, res) => {
   client.query(`SELECT count(*) FROM users WHERE user_name = $1`,
     [req.body.user_name])
     .then(results => {
+      console.log(req.body.user_name, results.rows);
       res.send(results.rows[0]);
     })
     .catch(console.error);
