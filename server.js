@@ -75,12 +75,6 @@ app.post('/addtrip', (req, res) => {
     });
 });
 
-
-
-
-
-
-
 app.get('/markers', (req, res) => {
   client.query('SELECT user_name, email, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
     .then(results => res.send(results.rows))
