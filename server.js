@@ -9,10 +9,7 @@ const bodyparser = require('body-parser');
 
 // Application Setup
 const app = express();
-
 const PORT = process.env.PORT || 3000;
-
-
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:8080';
 
 // process.env.DATABASE_URL = 'postgres://postgres:1234@localhost:5432/travelapp';
@@ -36,12 +33,9 @@ app.get('/test', (req, res) => res.send('hello world'));
 app.get('/trips', (req, res) => {
   client.query('SELECT user_name, email, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
     .then(results =>{
-      console.log(results.rows);
       res.send(results.rows);
     })
-
     .catch(console.error);
-
 });
 
 app.get('/admin', (req, res) => {
@@ -68,7 +62,6 @@ app.post('/createuser', (req, res) => {
     .catch(console.error);
 });
 
-//masons .post attempt commented because no faith
 app.post('/addtrip', (req, res) => {
 
   let {user_id, country, city, start_date, end_date} = req.body;
@@ -77,12 +70,16 @@ app.post('/addtrip', (req, res) => {
     INSERT INTO trips(user_id, country, city, start_date, end_date) VALUES($1, $2, $3, $4, $5)`,
   [user_id, country, city, start_date, end_date]
   )
-    .then(results => {
-
-      res.send('got results');
-    })
-    .catch(console.error);
+    .then(results => {res.send('new data user')
+      .catch(console.error);
+    });
 });
+
+
+
+
+
+
 
 app.get('/markers', (req, res) => {
   client.query('SELECT user_name, email, city, country, start_date, end_date FROM trips JOIN users ON trips.user_id=users.user_id;')
